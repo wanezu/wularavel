@@ -57,7 +57,7 @@ class LessonsController extends ApiController
         return $this->setStatusCode(201)->response([
             'status' => 'success',
             'message' => 'Lesson QQsd'
-        ])
+        ]);
     }
 
     /**

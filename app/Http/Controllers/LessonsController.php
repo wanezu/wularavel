@@ -15,6 +15,7 @@ class LessonsController extends ApiController
     public function __construct(LessonTransformer $lessonTransformer)
     {
         $this->lessonTransformer = $lessonTransformer;
+        $this->middleware('auth.basic', ['only' => ['store', 'update']]);
     }
 
     /**
@@ -49,7 +50,14 @@ class LessonsController extends ApiController
      */
     public function store(Request $request)
     {
-        //
+        if (!$request->get('title') or !$request->get('body')){
+            return $this->setStatusCode(422)->responseNotFound('validate fails');
+        }
+        Lesson::create($request->all());
+        return $this->setStatusCode(201)->response([
+            'status' => 'success',
+            'message' => 'Lesson QQsd'
+        ])
     }
 
     /**

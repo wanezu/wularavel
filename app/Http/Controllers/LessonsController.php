@@ -5,11 +5,10 @@ namespace App\Http\Controllers;
 use App\Lesson;
 use App\Transformer\LessonTransformer;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class LessonsController extends Controller
+class LessonsController extends ApiController
 {
     protected $lessonTransformer;
 
@@ -25,11 +24,10 @@ class LessonsController extends Controller
      */
     public function index()
     {
-       $lesson = Lesson::all();
-        return \Response::json([
+        $lesson = Lesson::all();
+        return $this->response([
             'status' => 'success',
-            'status_code' => 200,
-            'data' => $this->lessonTransformer->transform($lesson->toArray())
+            'data' => $this->lessonTransformer->transformCollection($lesson->toArray())
         ]);
     }
 
@@ -62,11 +60,13 @@ class LessonsController extends Controller
      */
     public function show($id)
     {
-        $lesson = Lesson::findOrFail($id);
-        return \Response::json([
+        $lesson = Lesson::find($id);
+        if (!$lesson){
+            return $this->responseNotFound();
+        }
+        return $this->response([
             'status' => 'success',
-            'status_code' => 200,
-            'data' => $this->lessonTransformer->transform($lesson->toArray())
+            'data' => $this->lessonTransformer->transform($lesson)
         ]);
     }
 
